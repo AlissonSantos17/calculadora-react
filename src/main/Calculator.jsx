@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import './Calculator.css';
+import React, { Component } from 'react'
+import './Calculator.css'
+
 import Button from '../components/Button'
 import Display from '../components/Display'
 
@@ -12,33 +13,35 @@ const initialState = {
 }
 
 export default class Calculator extends Component {
-    state = {...initialState}
+
+    state = { ...initialState }
+
     constructor(props) {
         super(props)
-        this.clearMemory = this.clearMemory.bind(this) 
-        this.setOperation = this.setOperation.bind(this) 
-        this.addDigit = this.addDigit.bind(this) 
+
+        this.clearMemory = this.clearMemory.bind(this)
+        this.setOperation = this.setOperation.bind(this)
+        this.addDigit = this.addDigit.bind(this)
     }
-    
+
     clearMemory() {
         this.setState({ ...initialState })
     }
-    
-    setOperation( operation ) {
+
+    setOperation(operation) {
         if (this.state.current === 0) {
             this.setState({ operation, current: 1, clearDisplay: true })
         } else {
             const equals = operation === '='
             const currentOperation = this.state.operation
-            
-            const values = [...this.state.values]
 
+            const values = [...this.state.values]
             try {
-            values[0] = eval(`${values[0]} ${currentOperation} ${values[1]}`)
-            } catch (error) {
+                values[0] = eval(`${values[0]} ${currentOperation} ${values[1]}`)
+            } catch(e) {
                 values[0] = this.state.values[0]
             }
-            
+
             values[1] = 0
 
             this.setState({
@@ -56,7 +59,7 @@ export default class Calculator extends Component {
             return
         }
 
-        const clearDisplay = this.state.displayValue === '0' 
+        const clearDisplay = this.state.displayValue === '0'
             || this.state.clearDisplay
         const currentValue = clearDisplay ? '' : this.state.displayValue
         const displayValue = currentValue + n
@@ -65,9 +68,10 @@ export default class Calculator extends Component {
         if (n !== '.') {
             const i = this.state.current
             const newValue = parseFloat(displayValue)
-            const values = { ...this.state.values }
+            const values = [...this.state.values]
             values[i] = newValue
             this.setState({ values })
+            console.log(values)
         }
     }
 
@@ -92,6 +96,7 @@ export default class Calculator extends Component {
                 <Button label="0" click={this.addDigit} double />
                 <Button label="." click={this.addDigit} />
                 <Button label="=" click={this.setOperation} operation />
+                
             </div>
         )
     }
